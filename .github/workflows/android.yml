@@ -14,24 +14,33 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: set up JDK 17
+    # استخدام Java 11 لحل مشكلة تعارض KSP
+    - name: set up JDK 11
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '11'
         distribution: 'temurin'
         cache: gradle
+
+    # توليد ملف Keystore افتراضي تلقائياً لحل مشكلة الفشل في التوقيع
+    - name: Generate Debug Keystore
+      run: |
+        keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+        if [ -d "./android" ]; then
+          cp debug.keystore ./android/
+        fi
 
     - name: Build with Gradle
       run: |
         if [ -f ./gradlew ]; then
           chmod +x ./gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
         elif [ -f ./android/gradlew ]; then
           cd android
           chmod +x ./gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
         else
-          gradle assembleDebug
+          gradle assembleDebug --no-daemon
         fi
 
     - name: Upload APK
