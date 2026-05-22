@@ -1,0 +1,6 @@
+{
+  "name": "Domain Sniper Pro",
+  "description": "Premium multi-metric domain valuation, brandability analyst, and smart alerting scouting dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
